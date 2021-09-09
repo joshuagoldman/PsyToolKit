@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="GlobalTypes.fs" />
+    <Compile Include="login\Types.fs" />
+    <Compile Include="login\State.fs" />
+    <Compile Include="login\view.fs" />
+    <Compile Include="main\Types.fs" />
+    <Compile Include="main\Functions\Miscellaneous.fs" />
+    <Compile Include="main\State.fs" />
+    <Compile Include="View.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fable.Browser.Dom" Version="2.4.4" />
+    <PackageReference Include="Fable.Core" Version="3.3.0-beta-001" />
+    <PackageReference Include="Fable.SignalR" Version="0.11.5" />
+    <PackageReference Include="Fable.SignalR.AspNetCore" Version="0.11.5" />
+    <PackageReference Include="Fable.SignalR.Elmish" Version="0.11.5" />
+    <PackageReference Include="Sutil" Version="1.0.0-alpha-006" />
+    <PackageReference Include="Thoth.Json" Version="6.0.0" />
+    <PackageReference Include="Fable.Remoting.Json" Version="2.16.0" />
+    <PackageReference Include="Fable.Remoting.MsgPack" Version="1.13.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="5.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\shared\Shared.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="5.0.2" />
+  </ItemGroup>
+</Project>

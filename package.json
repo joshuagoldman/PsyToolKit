@@ -12,6 +12,10 @@
   "version": "1.0.0",
   "dependencies": {
     "@microsoft/signalr": "^5.0.9",
-    "fable-compiler": "^2.13.0"
+    "css-loader": "^6.2.0",
+    "fable-compiler": "^2.13.0",
+    "sass-loader": "^12.1.0",
+    "source-map-loader": "^3.0.0",
+    "style-loader": "^3.2.1"
   }
 }

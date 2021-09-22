@@ -8,92 +8,57 @@ open App.GlobalTypes
 open Sutil.Attr
 open Fable.Core.JsInterop
 open Sutil.DOM
+open Fable.Core.JsInterop
+open Feliz
+open Main.Functions.Miscellaneous
 
-let styleSheet = [
-    Sutil.Styling.rule ".cv-img" [
-        Css.height 175
-        Css.width 250  
-        Css.borderStyleSolid
-        Css.marginLeft 5
-        Css.borderWidth 2
-    ]
-]
 
-let sharedModelState modelState =
-    match modelState with
-    | Deferred.HasNotStarteYet ->
-        [Html.none]
-    | Deferred.Ongoing ->
-        [
-            Html.div [
-                Html.i [
-                     class' "fas fa-spinner fa-spin"
-                ]
-                style [
-                    Css.fontSize 15
-                    Css.marginTop 20
-                    Css.textAlignCenter
-                    Css.color "black"
-                ]
-            ]
-            Html.div [
-                text "laddar..."
-                style [
-                    Css.marginLeft 4
-                    Css.fontSize 15
-                    Css.marginTop 20
-                    Css.textAlignCenter
-                    Css.color "black"
-                ]
-            ] 
+let zIndex3LevelStyle =
+    style [
+            Css.padding 30
+            Css.positionAbsolute
+            Css.zIndex 3
+            Css.backgroundImage "linear-gradient(270deg, rgba(0, 0, 0, 0.0 ), rgba(0, 0, 0, 0.8))"
+            Css.height 700
         ]
-    | Deferred.Resolved result ->
-        match result with
-        | Ok sharedModel ->
-            let errorAsElement =
-                Html.div [
-                    class' "column"
-                    Html.a [
-                        Attr.href (sharedModel : Shared.Model).CurrLink
-                        text "Klicka på denna länk för att börja undersökningen"
-                    ]
-                    style [
-                        Css.fontSize 15
-                        Css.marginTop 20
-                        Css.textAlignCenter
-                        Css.color "black"
-                    ]
-                ]
 
-            [errorAsElement]
-        | Result.Error errType ->
-            match errType with
-            | ErrorType.Multiple errors ->
-                let errorsAsElement =
-                    errors
-                    |> List.map (fun error ->
-                            Html.div [
-                                class' "column is-2"
-                                text error
-                            ]
-                        )
+let homeView (model: Main.Types.Model) dispatch =
+    Html.div[
+        class' "home"
+        zIndex3LevelStyle
+        
+        Html.div [
+            class' "home-basic-info"
+            Main.Functions.Miscellaneous.showTitle model dispatch 
+        ]
 
-                errorsAsElement
-               
-                
-            | ErrorType.Single singleError ->
-                let errorAsElement =
-                    Html.div [
-                        class' "column is-2"
-                        text singleError
-                        style [
-                            Css.fontSize 15
-                            Css.marginTop 20
-                            Css.textAlignCenter
-                        ]
-                    ]
+        Html.div [
+            class' "home-menu-area"
+            Html.div [
+                class' "menu-grid"
+                burgerMenuAlts model dispatch
+                hamburgerMenu model dispatch
+            ]
+        ]
+    ]
 
-                [errorAsElement]
+let infoView (model: Main.Types.Model) dispatch =
+    Html.div[
+        class' "info"
+
+        zIndex3LevelStyle
+
+        Html.div [
+            class' "info-menu-area"
+            Html.div [
+                class' "menu-grid"
+                burgerMenuAlts model dispatch
+                hamburgerMenu model dispatch
+            ]
+        ]
+        
+        Main.Functions.Miscellaneous.infoContent model dispatch
+    ]
 
 let app() =
 
@@ -103,53 +68,36 @@ let app() =
     then
         Main.Types.SignalRMessage >> dispatch |> Main.Types.Msg.ConnectToServer |> dispatch
 
-    let iObsCurrCode = iObsModel |> Store.map (fun model -> model.CurrCode)
+    let iObsIsMenuButtonFolded = 
+        Store.map (fun (x:Main.Types.Model) -> x.MenuButton) iObsModel
 
     Html.div [
-        class' "columns is-centered"
         Html.div [
-            class' "column"
-            style [
-                Css.minHeight 1000
-                Css.minWidth 1000
-                Css.backgroundRepeatNoRepeat
-                Css.backgroundSizeCover
-                Css.backgroundImage("url(Island.jpg)")
-            ]
-            Html.div [
-                class' "columns is-centered"
-                Html.div [
-                    Bind.fragment iObsModel ( fun model ->
-                        Html.div [
-                            class' "button"
-                            style [
-                                Css.marginTop 40
-                                Css.borderStyleSolid
-                                Css.borderWidth 2
-                                Css.borderColor "black"
-                            ]
-                            onClick (fun _ -> Main.Types.ExercizeButtonClicked |> dispatch
-                                    ) []
-
-                            text "Hämta länk"
-                        ]
-                    )
+            class' "backgroundVideo"
+            Html.video [
+                Attr.autoPlay true
+                Attr.muted true
+                Attr.loop true
+                Html.source [
+                    Attr.src "video.mp4"
+                    Attr.type' "video/mp4"
+                ]
+                Html.source [
+                    Attr.src "video.webm"
+                    Attr.type' "video/webm" 
                 ]
             ]
-            Bind.fragment iObsModel (fun model ->
-                [
-                    (class' "columns is-centered")
-                    style [
-                        Css.marginBottom 20
-                        Css.fontWeightBold
-                        Css.fontSize 25
-                    ]
-                ]
-                |> List.append (sharedModelState model.Shared) 
-                |> Html.div
-             )
         ]
-    ] |> Sutil.Styling.withStyle styleSheet
+        Html.div [
+            class' "backgroundImg"
+        ]
+        Bind.fragment iObsModel (fun model ->
+            match model.CurrPage with
+            | Main.Types.Home -> homeView model dispatch
+            | _ -> infoView model dispatch
+        )
+    ]
 
 app() 
 |> DOM.mountElement "sutil-app"
+

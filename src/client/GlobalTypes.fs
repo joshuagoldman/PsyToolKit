@@ -1,5 +1,20 @@
 ﻿module App.GlobalTypes
 
+let delayedMsg (time: int) 
+               (dispatch: 'msg -> unit)
+               (msg: 'msg) = async {
+    do! Async.Sleep time
+    msg |> dispatch
+}
+
+let delayedMsgs (time: int) 
+               (dispatch: 'msg -> unit)
+               (msgs: List<'msg>) = async {
+    do! Async.Sleep time
+    msgs
+    |> List.iter (fun msg -> msg |> dispatch)
+}
+
 type Deferred<'a> =
     | HasNotStarteYet
     | Ongoing
@@ -13,6 +28,8 @@ type HtmlElement = {
     FontSize: string option
     FontFamily: string option
     BorderWidth: string option
+    IsActive: bool option
+    Class: string option
 }
 
 let initELement = {
@@ -22,6 +39,8 @@ let initELement = {
     FontSize = None
     FontFamily = None
     BorderWidth = None
+    IsActive = Some true
+    Class = None
 }
 
 type User = {
@@ -40,6 +59,5 @@ type Status =
 type UserState = {
     CurrUser: User
     CurrUserStatus: Status
-
 }
 

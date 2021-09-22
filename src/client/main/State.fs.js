@@ -1,39 +1,44 @@
-import { initELement, Deferred$1 } from "../GlobalTypes.fs.js";
-import { Server_ServerMsg, Model as Model_1, Server_ServerMsg$reflection, Client_ClientMsg$reflection, Validation$1 } from "../../shared/Shared.fs.js";
-import { Msg, Model } from "./Types.fs.js";
-import { Cmd_ofMsg, Cmd_none } from "../.fable/Sutil.1.0.0-alpha-006/Types.fs.js";
-import { Cmd_SignalRModule_send, Elmish_Hub$2_$ctor_Z5FB4A559, Elmish_HubConnectionBuilder$6_$ctor_Z70E748BB, Elmish_HubConnectionBuilder$6__withUrl_Z721C83C5, Elmish_HubConnectionBuilder$6__withAutomaticReconnect, Elmish_HubConnectionBuilder$6__onMessage_Z18EB04B0 } from "../.fable/Fable.SignalR.Elmish.0.11.5/Elmish.fs.js";
-import { substring, toFail, printf, toText } from "../.fable/fable-library.3.2.9/String.js";
+import { HtmlElement, initELement, Deferred$1 } from "../GlobalTypes.fs.js";
+import { Msg, Model, Page } from "./Types.fs.js";
+import { Cmd_none } from "../.fable/Sutil.1.0.0-alpha-006/Types.fs.js";
+import { map, value as value_14, some } from "../.fable/fable-library.3.2.9/Option.js";
+import { Elmish_Hub$2_$ctor_Z5FB4A559, Elmish_HubConnectionBuilder$6_$ctor_Z70E748BB, Elmish_HubConnectionBuilder$6__withUrl_Z721C83C5, Elmish_HubConnectionBuilder$6__withAutomaticReconnect, Elmish_HubConnectionBuilder$6__onMessage_Z18EB04B0 } from "../.fable/Fable.SignalR.Elmish.0.11.5/Elmish.fs.js";
+import { toFail, printf, toText } from "../.fable/fable-library.3.2.9/String.js";
 import { HubConnection$5__startNow, HubConnection$5_$ctor_3ED56BCC, Bindings_signalR } from "../.fable/Fable.SignalR.0.11.5/HubConnection.fs.js";
 import { Json_TextMessageFormat_write, Json_TextMessageFormat_parse, HubRecords_CloseMessage$reflection, HubRecords_PingMessage$reflection, HubRecords_CancelInvocationMessage$reflection, HubRecords_StreamInvocationMessage$1$reflection, HubRecords_CompletionMessage$1$reflection, HubRecords_StreamItemMessage$1$reflection, HubRecords_InvocationMessage$1$reflection, Json_JsonProtocol_$ctor, MsgPack_parseMsg, MsgPack_MsgPackProtocol_$ctor } from "../.fable/Fable.SignalR.0.11.5/Protocols.fs.js";
 import { singleton, reverse, cons, empty } from "../.fable/fable-library.3.2.9/List.js";
 import { Reader__Read_24524716, Reader_$ctor_6C95DA22 } from "../.fable/Fable.Remoting.MsgPack.1.13.0/Read.fs.js";
 import { fromInteger, op_Subtraction, compare, fromBits, op_Addition } from "../.fable/fable-library.3.2.9/Long.js";
 import { obj_type, enum_type, int32_type, unit_type, class_type } from "../.fable/fable-library.3.2.9/Reflection.js";
+import { Model as Model_1, Server_ServerMsg$reflection, Client_ClientMsg$reflection } from "../../shared/Shared.fs.js";
 import { InvokeArg$1$reflection, MsgPack_Msg$4, MsgPack_Msg$4$reflection } from "../.fable/Fable.SignalR.0.11.5/Shared.fs.js";
 import { writeObject } from "../.fable/Fable.Remoting.MsgPack.1.13.0/Write.fs.js";
 import { choose, addRangeInPlace } from "../.fable/fable-library.3.2.9/Array.js";
 import { equals } from "../.fable/fable-library.3.2.9/Util.js";
 import { SimpleJson_readPath, SimpleJson_parse } from "../.fable/Fable.SimpleJson.3.21.0/SimpleJson.fs.js";
-import { some, map, value as value_11 } from "../.fable/fable-library.3.2.9/Option.js";
 import { createTypeInfo } from "../.fable/Fable.SimpleJson.3.21.0/TypeInfo.Converter.fs.js";
 import { Convert_serialize, Convert_fromJson } from "../.fable/Fable.SimpleJson.3.21.0/Json.Converter.fs.js";
 import { Result_Map, FSharpResult$2 } from "../.fable/fable-library.3.2.9/Choice.js";
-import { credentialIsValid } from "./Functions/Miscellaneous.fs.js";
+import { toString } from "../.fable/fable-library.3.2.9/Types.js";
 
 export function init() {
-    return [new Model(new Deferred$1(0), void 0, initELement, new Validation$1(0)), Cmd_none()];
+    return [new Model(new Deferred$1(0), void 0, initELement, [initELement, ""], new Page(0)), Cmd_none()];
 }
 
 export function update(msg, model) {
     let arg10_13;
     switch (msg.tag) {
+        case 1: {
+            const hub = msg.fields[0];
+            console.log(some(hub));
+            return [new Model(model.Shared, hub, model.MenuButton, model.MenuAlt, model.CurrPage), Cmd_none()];
+        }
         case 0: {
             const dispatch = msg.fields[0];
             const cmd = singleton((dispatch_1) => {
                 let arg10, protocol, protocol_1;
                 let connection;
-                const _ = Elmish_HubConnectionBuilder$6__onMessage_Z18EB04B0(Elmish_HubConnectionBuilder$6__withAutomaticReconnect(Elmish_HubConnectionBuilder$6__withUrl_Z721C83C5(Elmish_HubConnectionBuilder$6_$ctor_Z70E748BB(new Bindings_signalR.HubConnectionBuilder(), dispatch_1), (arg10 = window.location.host, toText(printf("http://%s%s"))(arg10)("/SignalR")))), (arg0_1) => (new Msg(3, arg0_1)));
+                const _ = Elmish_HubConnectionBuilder$6__onMessage_Z18EB04B0(Elmish_HubConnectionBuilder$6__withAutomaticReconnect(Elmish_HubConnectionBuilder$6__withUrl_Z721C83C5(Elmish_HubConnectionBuilder$6_$ctor_Z70E748BB(new Bindings_signalR.HubConnectionBuilder(), dispatch_1), (arg10 = window.location.host, toText(printf("http://%s%s"))(arg10)("/SignalR")))), (arg0_1) => (new Msg(2, arg0_1)));
                 connection = HubConnection$5_$ctor_3ED56BCC(_["hub@13"].withHubProtocol(_.useMsgPack ? ((protocol = MsgPack_MsgPackProtocol_$ctor(), {
                     name: "messagepack",
                     version: 1,
@@ -101,7 +106,7 @@ export function update(msg, model) {
                                     const parsedRaw = SimpleJson_parse(m);
                                     let _arg2;
                                     const parsedRaw_1 = parsedRaw;
-                                    const msgType_1 = value_11(map((arg00_4) => {
+                                    const msgType_1 = value_14(map((arg00_4) => {
                                         const typeInfo = createTypeInfo(enum_type("Fable.SignalR.Messages.MessageType", int32_type, [["Invocation", 1], ["StreamItem", 2], ["Completion", 3], ["StreamInvocation", 4], ["CancelInvocation", 5], ["Ping", 6], ["Close", 7]]));
                                         return Convert_fromJson(arg00_4, typeInfo) | 0;
                                     }, SimpleJson_readPath(singleton("type"), parsedRaw))) | 0;
@@ -119,7 +124,7 @@ export function update(msg, model) {
                                                     let msg_7;
                                                     return (msg_7 = arg_1, ((msg_7.target === "") ? (() => {
                                                         throw (new Error("Invalid payload for Invocation message."));
-                                                    })() : (void 0), ((msg_7.invocationId != null) ? ((value_11(msg_7.invocationId) === "") ? (() => {
+                                                    })() : (void 0), ((msg_7.invocationId != null) ? ((value_14(msg_7.invocationId) === "") ? (() => {
                                                         throw (new Error("Invalid payload for Invocation message."));
                                                     })() : (void 0)) : (void 0), msg_7)));
                                                 }, (() => {
@@ -136,7 +141,7 @@ export function update(msg, model) {
                                                 const res = _arg1.fields[0];
                                                 _arg2 = (new FSharpResult$2(0, (msg_5 = res, ((msg_5.target === "") ? (() => {
                                                     throw (new Error("Invalid payload for Invocation message."));
-                                                })() : (void 0), ((msg_5.invocationId != null) ? ((value_11(msg_5.invocationId) === "") ? (() => {
+                                                })() : (void 0), ((msg_5.invocationId != null) ? ((value_14(msg_5.invocationId) === "") ? (() => {
                                                     throw (new Error("Invalid payload for Invocation message."));
                                                 })() : (void 0)) : (void 0), msg_5)))));
                                             }
@@ -259,6 +264,13 @@ export function update(msg, model) {
             return [model, cmd];
         }
         case 3: {
+            const isActive = msg.fields[0];
+            let newHtmlElement;
+            const inputRecord = model.MenuButton;
+            newHtmlElement = (new HtmlElement(inputRecord.BackgroundColor, inputRecord.FontColor, inputRecord.FontWeight, inputRecord.FontSize, inputRecord.FontFamily, inputRecord.BorderWidth, !isActive, inputRecord.Class));
+            return [new Model(model.Shared, model.Hubb, newHtmlElement, model.MenuAlt, model.CurrPage), Cmd_none()];
+        }
+        case 2: {
             const clientMessage = msg.fields[0];
             switch (clientMessage.tag) {
                 case 1: {
@@ -266,12 +278,12 @@ export function update(msg, model) {
                     if (res_2.tag === 1) {
                         const errType_1 = res_2.fields[0];
                         const newSharedModel_3 = new Deferred$1(2, new FSharpResult$2(1, errType_1));
-                        return [new Model(newSharedModel_3, model.Hubb, model.GoToExercizeButton, model.CurrCode), Cmd_none()];
+                        return [new Model(newSharedModel_3, model.Hubb, model.MenuButton, model.MenuAlt, model.CurrPage), Cmd_none()];
                     }
                     else {
                         const link_1 = res_2.fields[0];
                         const newSharedModel_2 = new Deferred$1(2, new FSharpResult$2(0, new Model_1(link_1)));
-                        return [new Model(newSharedModel_2, model.Hubb, model.GoToExercizeButton, model.CurrCode), Cmd_none()];
+                        return [new Model(newSharedModel_2, model.Hubb, model.MenuButton, model.MenuAlt, model.CurrPage), Cmd_none()];
                     }
                 }
                 case 2: {
@@ -282,77 +294,38 @@ export function update(msg, model) {
                     if (res_1.tag === 1) {
                         const errType = res_1.fields[0];
                         const newSharedModel_1 = new Deferred$1(2, new FSharpResult$2(1, errType));
-                        return [new Model(newSharedModel_1, model.Hubb, model.GoToExercizeButton, model.CurrCode), Cmd_none()];
+                        return [new Model(newSharedModel_1, model.Hubb, model.MenuButton, model.MenuAlt, model.CurrPage), Cmd_none()];
                     }
                     else {
                         const link = res_1.fields[0];
                         const newSharedModel = new Deferred$1(2, new FSharpResult$2(0, new Model_1(link)));
-                        return [new Model(newSharedModel, model.Hubb, model.GoToExercizeButton, model.CurrCode), Cmd_none()];
+                        return [new Model(newSharedModel, model.Hubb, model.MenuButton, model.MenuAlt, model.CurrPage), Cmd_none()];
                     }
                 }
             }
         }
-        case 2: {
-            const cmdMsg = Cmd_SignalRModule_send(model.Hubb, new Server_ServerMsg(0));
-            return [new Model(new Deferred$1(1), model.Hubb, model.GoToExercizeButton, model.CurrCode), cmdMsg];
-        }
-        case 4: {
-            const strVal = msg.fields[0];
-            const matchValue_5 = credentialIsValid(strVal);
-            if (matchValue_5.tag === 1) {
-                const errType_2 = matchValue_5.fields[0];
-                const newModel_1 = new Model(model.Shared, model.Hubb, model.GoToExercizeButton, new Validation$1(1, new FSharpResult$2(1, [strVal, errType_2])));
-                return [newModel_1, Cmd_none()];
-            }
-            else {
-                const newModel = new Model(model.Shared, model.Hubb, model.GoToExercizeButton, new Validation$1(1, new FSharpResult$2(0, strVal)));
-                return [newModel, Cmd_none()];
-            }
-        }
         case 5: {
-            const keyType = msg.fields[0];
-            const matchValue_6 = [keyType, model.CurrCode];
-            if (matchValue_6[0].tag === 1) {
-                if (matchValue_6[1].tag === 0) {
-                    const strVal_3 = matchValue_6[0].fields[0];
-                    const cmdMsg_5 = Cmd_ofMsg(new Msg(4, strVal_3));
-                    return [model, cmdMsg_5];
-                }
-                else if (matchValue_6[1].fields[0].tag === 1) {
-                    const code_2 = matchValue_6[1].fields[0].fields[0][0];
-                    const errType_3 = matchValue_6[1].fields[0].fields[0][1];
-                    const strVal_2 = matchValue_6[0].fields[0];
-                    const cmdMsg_3 = Cmd_ofMsg(new Msg(4, code_2 + strVal_2));
-                    return [model, cmdMsg_3];
-                }
-                else {
-                    const code_1 = matchValue_6[1].fields[0].fields[0];
-                    const strVal_1 = matchValue_6[0].fields[0];
-                    const cmdMsg_2 = Cmd_ofMsg(new Msg(4, code_1 + strVal_1));
-                    return [model, cmdMsg_2];
-                }
-            }
-            else if (matchValue_6[1].tag === 1) {
-                if (matchValue_6[1].fields[0].tag === 1) {
-                    const code_3 = matchValue_6[1].fields[0].fields[0][0];
-                    const errType_4 = matchValue_6[1].fields[0].fields[0][1];
-                    const cmdMsg_4 = Cmd_ofMsg(new Msg(4, substring(code_3, 0, code_3.length - 1)));
-                    return [model, cmdMsg_4];
-                }
-                else {
-                    const code = matchValue_6[1].fields[0].fields[0];
-                    const cmdMsg_1 = Cmd_ofMsg(new Msg(4, substring(code, 0, code.length - 1)));
-                    return [model, cmdMsg_1];
-                }
-            }
-            else {
-                return [model, Cmd_none()];
-            }
+            const page = msg.fields[0];
+            const newPage = (toString(page) === toString(model.CurrPage)) ? (new Page(0)) : page;
+            return [new Model(model.Shared, model.Hubb, model.MenuButton, model.MenuAlt, newPage), Cmd_none()];
+        }
+        case 7: {
+            const color = msg.fields[0];
+            let newEl;
+            const inputRecord_1 = model.MenuButton;
+            newEl = (new HtmlElement(inputRecord_1.BackgroundColor, inputRecord_1.FontColor, inputRecord_1.FontWeight, inputRecord_1.FontSize, inputRecord_1.FontFamily, inputRecord_1.BorderWidth, inputRecord_1.IsActive, color));
+            return [new Model(model.Shared, model.Hubb, newEl, model.MenuAlt, model.CurrPage), Cmd_none()];
+        }
+        case 6: {
+            const menuAltName = msg.fields[1];
+            const className = msg.fields[0];
+            let newEl_1;
+            const inputRecord_2 = model.MenuButton;
+            newEl_1 = (new HtmlElement(inputRecord_2.BackgroundColor, inputRecord_2.FontColor, inputRecord_2.FontWeight, inputRecord_2.FontSize, inputRecord_2.FontFamily, inputRecord_2.BorderWidth, inputRecord_2.IsActive, className));
+            return [new Model(model.Shared, model.Hubb, model.MenuButton, [newEl_1, menuAltName], model.CurrPage), Cmd_none()];
         }
         default: {
-            const hub = msg.fields[0];
-            console.log(some(hub));
-            return [new Model(model.Shared, hub, model.GoToExercizeButton, model.CurrCode), Cmd_none()];
+            throw (new Error("Match failure: Main.Types.Msg"));
         }
     }
 }

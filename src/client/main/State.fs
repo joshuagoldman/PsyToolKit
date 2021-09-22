@@ -12,8 +12,9 @@ let init () =
     {
         Shared = HasNotStarteYet
         Hubb = None
-        GoToExercizeButton = initELement
-        CurrCode = Validation.ValidationNotStarted
+        MenuButton = initELement
+        MenuAlt = initELement, ""
+        CurrPage = Home
     }, Cmd.none
 
 let update msg model =
@@ -30,6 +31,10 @@ let update msg model =
 
         Browser.Dom.console.log(sprintf "http://%s%s" Browser.Dom.window.location.host Shared.Endpoints.Root)
         model, cmd
+    | MenuButtonClicked isActive ->
+        let newHtmlElement = 
+            {model.MenuButton with IsActive = isActive |> not |> Some}
+        {model with MenuButton = newHtmlElement} , Cmd.none
     | SignalRMessage clientMessage ->
         match clientMessage with
         | Shared.Client.ClientMsg.ExercizeButtonClickedResult res ->
@@ -67,67 +72,17 @@ let update msg model =
                 
         | Shared.Client.ClientMsg.Invoke ->
             model, Cmd.none
-    | ExercizeButtonClicked ->
-        let cmdMsg =
-            Server.ServerMsg.ExercizeButtonClicked 
-            |> Cmd.SignalR.send model.Hubb 
-
-        { model with Shared = Deferred.Ongoing}, cmdMsg
-    | Types.Msg.TestCredential(strVal) ->
+    | PageChanged page ->
+        let newPage =
+            match ((page |> string) = (model.CurrPage |> string)) with
+            | true -> Home
+            | false -> page
+        {model with CurrPage = newPage}, Cmd.none
+    | ChangeMenuButtonColor color ->
+        let newEl =
+            {model.MenuButton with Class = Some color}
         
-        match (Main.Functions.Miscellaneous.credentialIsValid strVal) with
-        | Ok() ->
-            let newModel =
-                {model with CurrCode =
-                                strVal
-                                |> Ok
-                                |> Validation.ValidationResolved}
-            newModel, Cmd.none
-        | Result.Error errType ->
-            let newModel =
-                {model with CurrCode =
-                                (strVal,errType)
-                                |> Result.Error
-                                |> Validation.ValidationResolved}
-            newModel, Cmd.none
-                
-    | Changeinput(keyType) ->
-        match(keyType, model.CurrCode) with
-        | (KeyType.BackSpace, Validation.ValidationNotStarted) ->
-            model, Cmd.none
-        | (KeyType.BackSpace, Validation.ValidationResolved(Ok code)) ->
-            let cmdMsg =
-                code.Substring(0,(code.Length - 1))
-                |> Types.Msg.TestCredential
-                |> Cmd.ofMsg
-
-            model, cmdMsg
-        | (KeyType.OtherKey strVal, Validation.ValidationResolved(Ok code)) ->
-            let cmdMsg =
-                code + strVal
-                |> Types.Msg.TestCredential
-                |> Cmd.ofMsg
-
-            model, cmdMsg
-        | (KeyType.OtherKey strVal, Validation.ValidationResolved(Result.Error(code,errType))) ->
-            let cmdMsg =
-                code + strVal
-                |> Types.Msg.TestCredential
-                |> Cmd.ofMsg
-
-            model, cmdMsg
-        | (KeyType.BackSpace, Validation.ValidationResolved(Result.Error(code,errType))) ->
-            let cmdMsg =
-                code.Substring(0,(code.Length - 1))
-                |> Types.Msg.TestCredential
-                |> Cmd.ofMsg
-
-            model, cmdMsg
-        | (KeyType.OtherKey strVal, Validation.ValidationNotStarted) ->
-            let cmdMsg =
-                strVal
-                |> Types.Msg.TestCredential
-                |> Cmd.ofMsg
-
-            model, cmdMsg
-        
+        {model with MenuButton = newEl}, Cmd.none
+    | ChangeMenuAltColor(className, menuAltName) ->
+        let newEl = {model.MenuButton with Class = Some className}
+        {model with MenuAlt = (newEl, menuAltName)}, Cmd.none

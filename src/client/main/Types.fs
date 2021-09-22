@@ -14,17 +14,27 @@ type UserInfo = {
     CurrPassword: string option
 }
 
+type Page = 
+    | Home
+    | AboutMe
+    | Interests
+    | Education
+    | Experience
+
 type Msg =
     | ConnectToServer of Dispatch<Client.ClientMsg>
     | RegisterHub of Fable.SignalR.Elmish.Elmish.Hub<Server.ServerMsg,Client.ClientMsg>
-    | ExercizeButtonClicked
     | SignalRMessage of Client.ClientMsg
-    | TestCredential of credential:string  
-    | Changeinput of KeyType
+    | MenuButtonClicked of bool
+    | TestCredential of string
+    | PageChanged of Page
+    | ChangeMenuAltColor of color:string * menuAltName:string
+    | ChangeMenuButtonColor of string
 type Model =  {
     Shared: Deferred<Result<Shared.Model, ErrorType>>
     Hubb: Fable.SignalR.Elmish.Elmish.Hub<Server.ServerMsg,Client.ClientMsg> option
-    GoToExercizeButton : HtmlElement
-    CurrCode: Validation<Result<string,string * ErrorType>>
+    MenuButton: HtmlElement
+    MenuAlt: HtmlElement * string
+    CurrPage: Page
 }
 

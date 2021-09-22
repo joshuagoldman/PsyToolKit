@@ -28,5 +28,19 @@ module.exports = {
 		
     },
     module: {
+		rules: [
+			{
+				test: /\.css$/,
+				use: [
+					'style-loader',
+					'css-loader'
+				]
+			},
+			{
+				test: /\.(jpe?g|png|gif|svg)$/i,
+				include : path.join(__dirname, 'app'),
+				loader  : 'url-loader?limit=30000&name=images/[name].[ext]'
+		    }
+		]
     }
 }
